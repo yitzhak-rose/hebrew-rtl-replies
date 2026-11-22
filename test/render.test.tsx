@@ -1,6 +1,6 @@
 import { expect, test } from 'claude-code/testing'
 
-const MSG = { plugin: 'hebrew-rtl', component: 'AssistantMessage' } as const
+const MSG = { plugin: 'hebrew-rtl-for-claude-code', component: 'AssistantMessage' } as const
 
 const SAMPLE = [
   '# כותרת עם `code` ו-**English**',

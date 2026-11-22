@@ -1,5 +1,5 @@
 {
-  "name": "hebrew-rtl",
+  "name": "hebrew-rtl-for-claude-code",
   "owner": { "name": "yitzhak-rose" },
-  "plugins": [{ "name": "hebrew-rtl", "source": "./", "description": "Hebrew and other right-to-left replies drawn right to left in the Claude desktop app." }]
+  "plugins": [{ "name": "hebrew-rtl-for-claude-code", "source": "./", "description": "Hebrew and other right-to-left replies drawn right to left in the Claude desktop app." }]
 }

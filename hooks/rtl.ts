@@ -1,4 +1,4 @@
-// Pure text logic for hebrew-rtl: no engine calls, so it can be tested on its own.
+// Pure text logic for hebrew-rtl-for-claude-code: no engine calls, so it can be tested on its own.
 //
 // A reply is cut into blocks. Code fences, tables and paragraphs that read left-to-right stay
 // markdown, drawn by the app as usual. A right-to-left paragraph is cut into lines, and each line
