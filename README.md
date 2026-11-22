@@ -16,19 +16,35 @@
 
 ## התקנה
 
-**באפליקציה למחשב:** לחצו על **+** ליד תיבת ההודעה ← **Plugins** ← **Add marketplace**, הקלידו `yitzhak-rose/hebrew-rtl`, ואז **Add plugin** ובחרו ב-hebrew-rtl.
+צריך גרסה עדכנית של Claude Code. התוסף משתמש ביכולת חדשה, וגרסאות ישנות מתקינות אותו אבל לא מצליחות לטעון אותו. האפליקציה למחשב מתעדכנת לבד.
 
-**בטרמינל:**
+**1. פתחו טרמינל** (PowerShell ב-Windows, Terminal ב-Mac) והריצו את שתי הפקודות האלה, אחת אחרי השנייה:
 
 </div>
 
 ```
-/plugin install hebrew-rtl --marketplace yitzhak-rose/hebrew-rtl
+claude plugin marketplace add yitzhak-rose/hebrew-rtl
+claude plugin install hebrew-rtl@hebrew-rtl
 ```
 
 <div dir="rtl">
 
-אחרי ההתקנה סגרו ופתחו מחדש את האפליקציה.
+**2. סגרו ופתחו מחדש את אפליקציית Claude.** מעכשיו התוסף פועל בכל שיחה חדשה בלשונית Code.
+
+אם מופיעה השגיאה שהפקודה `claude` לא קיימת, צריך להתקין את Claude Code לטרמינל: [הוראות התקנה](https://code.claude.com/docs/en/setup). אם `claude --version` מראה גרסה ישנה, עדכנו אותה עם `claude update`.
+
+**מתוך Claude Code בטרמינל** אפשר גם להריץ:
+
+</div>
+
+```
+/plugin marketplace add yitzhak-rose/hebrew-rtl
+/plugin install hebrew-rtl@hebrew-rtl
+```
+
+<div dir="rtl">
+
+**כיבוי או הסרה:** באפליקציה, **+** ליד תיבת ההודעה ← **Plugins** ← **Manage plugins**, או בטרמינל `claude plugin uninstall hebrew-rtl@hebrew-rtl`.
 
 ## מה מטופל
 
@@ -65,9 +81,16 @@
 
 A plugin for Claude Code in the Claude desktop app (Code tab). It draws Claude's Hebrew replies right to left, aligned right, with punctuation where it belongs. Code blocks, tables and English paragraphs stay left to right. Arabic and other right-to-left scripts work too.
 
-**Install (desktop app):** click **+** next to the prompt box → **Plugins** → **Add marketplace** → `yitzhak-rose/hebrew-rtl` → **Add plugin**. Then restart the app.
+**Install.** Needs a recent Claude Code: the plugin uses a new hooks feature, and older versions install it but cannot load it. In a terminal, run:
 
-**Install (terminal):** `/plugin install hebrew-rtl --marketplace yitzhak-rose/hebrew-rtl`
+```
+claude plugin marketplace add yitzhak-rose/hebrew-rtl
+claude plugin install hebrew-rtl@hebrew-rtl
+```
+
+Then restart the Claude desktop app. Inside a Claude Code terminal session, `/plugin marketplace add yitzhak-rose/hebrew-rtl` and `/plugin install hebrew-rtl@hebrew-rtl` do the same. No `claude` command? See the [setup guide](https://code.claude.com/docs/en/setup). Old version? Run `claude update`.
+
+**Turn off or remove:** in the desktop app, **+** next to the prompt box → **Plugins** → **Manage plugins**, or `claude plugin uninstall hebrew-rtl@hebrew-rtl`.
 
 **How it works.** A `ui.render` hook on `AssistantMessage` (desktop surface only) cuts the reply into blocks. Fences, tables and left-to-right paragraphs go back to the app's own Markdown renderer. A right-to-left paragraph is cut into lines, and each line into items: a right-to-left word, a run of English kept together with the symbols, numbers and brackets inside it, a number, a symbol, or a link. The items are laid out in a `row-reverse` wrapping row, so lines start and wrap at the right edge. Each item's text is wrapped in Unicode embedding marks (RLE/LRE … PDF) so its letters order correctly. The parsing logic is in `hooks/rtl.ts`; drawing is in `hooks/register.tsx`.
 
