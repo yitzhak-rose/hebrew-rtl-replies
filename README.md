@@ -31,7 +31,7 @@ claude plugin install hebrew-rtl@hebrew-rtl
 
 **2. סגרו ופתחו מחדש את האפליקציה.** מעכשיו התוסף פועל בכל שיחה חדשה.
 
-אם הטרמינל עונה שהפקודה <code dir="ltr">claude</code> לא קיימת, צריך קודם להתקין את <span dir="ltr">Claude Code</span> לפי [הוראות ההתקנה](https://code.claude.com/docs/en/setup). אם הגרסה ישנה, מעדכנים אותה עם הפקודה <code dir="ltr">claude update</code>.
+אם הטרמינל עונה שהפקודה <code dir="ltr">claude</code> לא קיימת, צריך קודם להתקין את <span dir="ltr">Claude Code</span> לפי [הוראות ההתקנה](https://code.claude.com/docs/en/setup). אם הגרסה ישנה, מעדכנים אותה עם הפקודה <code dir="ltr">claude update</code>. מי שהתקין דרך <span dir="ltr">winget</span> מעדכן עם <code dir="ltr">winget upgrade Anthropic.ClaudeCode</code>.
 
 **אפשר גם מתוך שיחה של <span dir="ltr">Claude Code</span> בטרמינל:**
 
@@ -97,7 +97,7 @@ claude plugin marketplace add yitzhak-rose/hebrew-rtl
 claude plugin install hebrew-rtl@hebrew-rtl
 ```
 
-Then restart the Claude desktop app. Inside a Claude Code terminal session, `/plugin marketplace add yitzhak-rose/hebrew-rtl` and `/plugin install hebrew-rtl@hebrew-rtl` do the same. No `claude` command? See the [setup guide](https://code.claude.com/docs/en/setup). Old version? Run `claude update`.
+Then restart the Claude desktop app. Inside a Claude Code terminal session, `/plugin marketplace add yitzhak-rose/hebrew-rtl` and `/plugin install hebrew-rtl@hebrew-rtl` do the same. No `claude` command? See the [setup guide](https://code.claude.com/docs/en/setup). Old version? Run `claude update`, or `winget upgrade Anthropic.ClaudeCode` if you installed it with winget.
 
 **Turn off or remove:** in the desktop app, **+** next to the prompt box → **Plugins** → **Manage plugins**, or `claude plugin uninstall hebrew-rtl@hebrew-rtl`.
 
