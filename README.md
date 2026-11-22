@@ -1,4 +1,4 @@
-# hebrew-rtl-for-claude-code
+# hebrew-rtl-replies
 
 <div dir="rtl">
 
@@ -23,8 +23,8 @@
 </div>
 
 ```
-claude plugin marketplace add yitzhak-rose/hebrew-rtl-for-claude-code
-claude plugin install hebrew-rtl-for-claude-code@hebrew-rtl-for-claude-code
+claude plugin marketplace add yitzhak-rose/hebrew-rtl-replies
+claude plugin install hebrew-rtl-replies@hebrew-rtl-replies
 ```
 
 <div dir="rtl">
@@ -38,8 +38,8 @@ claude plugin install hebrew-rtl-for-claude-code@hebrew-rtl-for-claude-code
 </div>
 
 ```
-/plugin marketplace add yitzhak-rose/hebrew-rtl-for-claude-code
-/plugin install hebrew-rtl-for-claude-code@hebrew-rtl-for-claude-code
+/plugin marketplace add yitzhak-rose/hebrew-rtl-replies
+/plugin install hebrew-rtl-replies@hebrew-rtl-replies
 ```
 
 <div dir="rtl">
@@ -49,7 +49,7 @@ claude plugin install hebrew-rtl-for-claude-code@hebrew-rtl-for-claude-code
 </div>
 
 ```
-claude plugin uninstall hebrew-rtl-for-claude-code@hebrew-rtl-for-claude-code
+claude plugin uninstall hebrew-rtl-replies@hebrew-rtl-replies
 ```
 
 <div dir="rtl">
@@ -75,7 +75,7 @@ claude plugin uninstall hebrew-rtl-for-claude-code@hebrew-rtl-for-claude-code
 
 ## משוב ודיווח על תקלות
 
-משהו מוצג לא נכון, או שיש לכם רעיון? [פתחו דיווח חדש](https://github.com/yitzhak-rose/hebrew-rtl-for-claude-code/issues/new). כדי שיהיה אפשר לתקן, צרפו צילום מסך ואת הטקסט שהוצג לא נכון. אפשר להעתיק אותו מהתשובה של <span dir="ltr">Claude</span>.
+משהו מוצג לא נכון, או שיש לכם רעיון? [פתחו דיווח חדש](https://github.com/yitzhak-rose/hebrew-rtl-replies/issues/new). כדי שיהיה אפשר לתקן, צרפו צילום מסך ואת הטקסט שהוצג לא נכון. אפשר להעתיק אותו מהתשובה של <span dir="ltr">Claude</span>.
 
 ## הסרת אחריות
 
@@ -93,13 +93,13 @@ A plugin for Claude Code in the Claude desktop app (Code tab). It draws Claude's
 **Install.** Needs a recent Claude Code: the plugin uses a new hooks feature, and older versions install it but cannot load it. In a terminal, run:
 
 ```
-claude plugin marketplace add yitzhak-rose/hebrew-rtl-for-claude-code
-claude plugin install hebrew-rtl-for-claude-code@hebrew-rtl-for-claude-code
+claude plugin marketplace add yitzhak-rose/hebrew-rtl-replies
+claude plugin install hebrew-rtl-replies@hebrew-rtl-replies
 ```
 
-Then restart the Claude desktop app. Inside a Claude Code terminal session, `/plugin marketplace add yitzhak-rose/hebrew-rtl-for-claude-code` and `/plugin install hebrew-rtl-for-claude-code@hebrew-rtl-for-claude-code` do the same. No `claude` command? See the [setup guide](https://code.claude.com/docs/en/setup). Old version? Run `claude update`, or `winget upgrade Anthropic.ClaudeCode` if you installed it with winget.
+Then restart the Claude desktop app. Inside a Claude Code terminal session, `/plugin marketplace add yitzhak-rose/hebrew-rtl-replies` and `/plugin install hebrew-rtl-replies@hebrew-rtl-replies` do the same. No `claude` command? See the [setup guide](https://code.claude.com/docs/en/setup). Old version? Run `claude update`, or `winget upgrade Anthropic.ClaudeCode` if you installed it with winget.
 
-**Turn off or remove:** in the desktop app, **+** next to the prompt box → **Plugins** → **Manage plugins**, or `claude plugin uninstall hebrew-rtl-for-claude-code@hebrew-rtl-for-claude-code`.
+**Turn off or remove:** in the desktop app, **+** next to the prompt box → **Plugins** → **Manage plugins**, or `claude plugin uninstall hebrew-rtl-replies@hebrew-rtl-replies`.
 
 **How it works.** A `ui.render` hook on `AssistantMessage` (desktop surface only) cuts the reply into blocks. Fences, tables and left-to-right paragraphs go back to the app's own Markdown renderer. A right-to-left paragraph is cut into lines, and each line into items: a right-to-left word, a run of English kept together with the symbols, numbers and brackets inside it, a number, a symbol, or a link. The items are laid out in a `row-reverse` wrapping row, so lines start and wrap at the right edge. Each item's text is wrapped in Unicode embedding marks (RLE/LRE … PDF) so its letters order correctly. The parsing logic is in `hooks/rtl.ts`; drawing is in `hooks/register.tsx`.
 
@@ -109,7 +109,7 @@ Then restart the Claude desktop app. Inside a Claude Code terminal session, `/pl
 
 ## Feedback
 
-Something drawn wrong, or an idea? [Open an issue](https://github.com/yitzhak-rose/hebrew-rtl-for-claude-code/issues/new) with a screenshot and the text that was drawn wrong (copy it from Claude's reply).
+Something drawn wrong, or an idea? [Open an issue](https://github.com/yitzhak-rose/hebrew-rtl-replies/issues/new) with a screenshot and the text that was drawn wrong (copy it from Claude's reply).
 
 ## Disclaimer
 
