@@ -8,10 +8,15 @@
 /** Letters of right-to-left scripts: Hebrew, Arabic, Syriac, Thaana, NKo and their presentation forms. */
 export const RTL = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/
 const RTL_G = /[\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/g
-const LAT = /[A-Za-z\u00C0-\u024F]/
-const LAT_G = /[A-Za-z\u00C0-\u024F]/g
+// Latin letters, with accents. U+00D7 (\u00D7) and U+00F7 (\u00F7) sit in that block but are math signs.
+const LAT = /[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]/
+const LAT_G = /[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]/g
 const DIGIT = /[0-9\u0660-\u0669\u06F0-\u06F9]/
-const ALNUM = /[A-Za-z\u00C0-\u024F0-9]/
+const ALNUM = /[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F0-9]/
+// Signs that stand between numbers ("10\u201320", "3 \u00D7 4", "(1+2)\u00D73"). Like the Unicode bidi rules,
+// they split a number written without spaces, so each number keeps its place in the sentence.
+// Signs that belong to a number (a leading minus, %, a currency, the dot in 1.5) are not here.
+const OPS = /([\u00D7\u00F7\u2013\u2014=<>\u2248\u2260\u2264\u2265()[\]{}])/
 
 /** Embedding marks. The desktop app keeps these (it drops the isolate marks U+2066..U+2069). */
 export const RLE = '\u202B'
@@ -57,7 +62,7 @@ function replyProse(text: string): string {
 export function isRtl(p: string): boolean {
   const prose = proseOf(p)
   if (!RTL.test(prose)) return false
-  const first = prose.match(/[A-Za-z\u00C0-\u024F\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/)?.[0] ?? ''
+  const first = prose.match(/[A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F\u0590-\u08FF\uFB1D-\uFDFF\uFE70-\uFEFF]/)?.[0] ?? ''
   if (RTL.test(first)) return true
   const r = (prose.match(RTL_G) || []).length
   const l = (prose.match(LAT_G) || []).length
@@ -298,7 +303,13 @@ function addWord(out: Tok[], hidden: string, style: Style, glue: boolean) {
     g = true
   }
   if (URL.test(core)) out.push({ text: core, href: core, style, whole: true, glue: g })
-  else out.push({ text: core, style, glue: g })
+  else if (!LAT.test(core) && DIGIT.test(core)) {
+    for (const part of core.split(OPS)) {
+      if (!part) continue
+      out.push({ text: part, style, glue: g })
+      g = true
+    }
+  } else out.push({ text: core, style, glue: g })
   for (const piece of trail.match(/[)\]"']+|[.,;:!?]+/g) ?? []) out.push({ text: piece, style, glue: true })
 }
 
@@ -324,6 +335,12 @@ export function group(toks: Tok[]): Item[] {
 
   const closeRun = () => {
     if (run) {
+      // Symbols up to the last number stay with the run ("f(x) = 2x + 1").
+      let lastNum = -1
+      pending.forEach((t, i) => {
+        if (kindOf(t) === 'num') lastNum = i
+      })
+      run.push(...pending.splice(0, lastNum + 1))
       while (pending.length) {
         const t = pending[0]!
         const txt = run.map(x => x.text).join('')
@@ -334,6 +351,21 @@ export function group(toks: Tok[]): Item[] {
           run.push(t)
           pending.shift()
         } else break
+      }
+      // An opening bracket or quote whose partner is not in the run belongs to the sentence:
+      // "(iOS ו-Android)" opens right to left, around Hebrew.
+      const open = run[0]!
+      const txt = run.map(x => x.text).join('')
+      const unmatched =
+        run.length > 1 &&
+        OPENER.test(open.text) &&
+        ((open.text.includes('(') && count(txt, '(') > count(txt, ')')) ||
+          (open.text.includes('[') && count(txt, '[') > count(txt, ']')) ||
+          (open.text.includes('"') && count(txt, '"') % 2 === 1) ||
+          (open.text.includes("'") && count(txt, "'") % 2 === 1))
+      if (unmatched) {
+        items.push({ kind: 'neu', toks: [open], glue: open.glue })
+        run.shift()
       }
       items.push({ kind: 'lat', toks: run, glue: run[0]!.glue })
       run = null

@@ -140,6 +140,40 @@ test('numbers, dates, times, money and units', async () => {
   expect(d('(כיסוי של 80%+)')).toBe('[rtl:(כיסוי] [rtl:של] [num:80%+] [neu+:)]')
 })
 
+test('× and ÷ are math signs, not letters', async () => {
+  expect(d('1,200 × 21 = 25,200 צעדים')).toBe('[num:1,200] [neu:×] [num:21] [neu:=] [num:25,200] [rtl:צעדים]')
+  expect(d('₪1,200 ÷ 4 = ₪300')).toBe('[num:₪1,200] [neu:÷] [num:4] [neu:=] [num:₪300]')
+  expect(d('סה"כ: 3 × 4 = 12')).toBe('[rtl:סה"כ:] [num:3] [neu:×] [num:4] [neu:=] [num:12]')
+})
+
+test('signs between numbers written without spaces split them', async () => {
+  expect(d('הטווח 10–20 מעלות')).toBe('[rtl:הטווח] [num:10] [neu+:–] [num+:20] [rtl:מעלות]')
+  expect(d('(1+2)×3 = 9')).toBe('[neu:(] [num+:1+2] [neu+:)] [neu+:×] [num+:3] [neu:=] [num:9]')
+  expect(d('יחס 3:1 ו-1/2 כוס')).toBe('[rtl:יחס] [num:3:1] [rtl:ו-] [num+:1/2] [rtl:כוס]')
+})
+
+test('a sign that belongs to a number stays on it', async () => {
+  expect(d('המספר -5 שלילי')).toBe('[rtl:המספר] [num:-5] [rtl:שלילי]')
+  expect(d('עלייה של 15% ו-$25.99')).toBe('[rtl:עלייה] [rtl:של] [num:15%] [rtl:ו-] [num+:$25.99]')
+})
+
+test('signs and numbers after an English run stay with it', async () => {
+  expect(d('הפונקציה f(x) = 2x + 1 פשוטה')).toBe('[rtl:הפונקציה] [lat:f(x) = 2x + 1] [rtl:פשוטה]')
+})
+
+test('a bracket opened before English and closed after Hebrew stays in the sentence', async () => {
+  expect(d('האפליקציה (iOS ו-Android) זמינה')).toBe(
+    '[rtl:האפליקציה] [neu:(] [lat+:iOS] [rtl:ו-] [lat+:Android] [neu+:)] [rtl:זמינה]',
+  )
+  expect(d('הוספתי (React) לפרויקט')).toBe('[rtl:הוספתי] [lat:(React)] [rtl:לפרויקט]')
+  expect(d('המודל (Opus 5.5) מהיר')).toBe('[rtl:המודל] [lat:(Opus 5.5)] [rtl:מהיר]')
+})
+
+test('brackets around Hebrew and numbers', async () => {
+  expect(d('(בערך 1,200)')).toBe('[rtl:(בערך] [num:1,200] [neu+:)]')
+  expect(d('התוצאה: 5 (במקום 4).')).toBe('[rtl:התוצאה:] [num:5] [rtl:(במקום] [num:4] [neu+:)] [neu+:.]')
+})
+
 test('a question mark or colon flush against English stays glued', async () => {
   expect(d('בחרו `FastAPI`?')).toBe('[rtl:בחרו] [lat:FastAPI] [neu+:?]')
 })
