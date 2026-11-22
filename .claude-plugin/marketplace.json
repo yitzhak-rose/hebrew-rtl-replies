@@ -1,0 +1,5 @@
+{
+  "name": "hebrew-rtl",
+  "owner": { "name": "yitzhak-rose" },
+  "plugins": [{ "name": "hebrew-rtl", "source": "./", "description": "Hebrew and other right-to-left replies drawn right to left in the Claude desktop app." }]
+}
