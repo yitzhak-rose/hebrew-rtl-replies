@@ -78,7 +78,9 @@ const TABLE = /^\s*\|/
 export function parse(text: string): Block[] {
   const out: Block[] = []
   const replyRtl = isRtl(replyProse(text))
-  const rtlPara = (t: string) => (replyRtl ? RTL.test(proseOf(t)) : isRtl(t))
+  // A line of numbers and signs alone ("11,025 ÷ 256 = 43.07") follows a right-to-left reply too.
+  const rtlPara = (t: string) =>
+    replyRtl ? RTL.test(proseOf(t)) || (DIGIT.test(t) && !LAT.test(proseOf(t))) : isRtl(t)
   const md = (t: string) => {
     const prev = out[out.length - 1]
     if (prev && prev.kind === 'md') prev.text += '\n\n' + t
@@ -398,7 +400,40 @@ export function group(toks: Tok[]): Item[] {
     }
   }
   closeRun()
-  return items
+  return mathRuns(items)
+}
+
+// Signs of arithmetic and comparison. A dash between numbers is a range ("10–20") and is left to
+// the sentence, so it is not here.
+const MATHOP = /^[×÷+\-−=<>≈≠≤≥±*/^()[\]]+$/
+const isOp = (it: Item) => it.kind === 'neu' && it.toks.length === 1 && MATHOP.test(it.toks[0]!.text)
+
+/** Numbers joined by math signs ("11,025 ÷ 256 = 43.07") read left to right as one expression,
+ * as they are written in Hebrew too. A lone number with a sign ("≈ 25,000") is left alone. */
+function mathRuns(items: Item[]): Item[] {
+  const out: Item[] = []
+  let i = 0
+  while (i < items.length) {
+    let j = i
+    while (j < items.length && (items[j]!.kind === 'num' || isOp(items[j]!))) j++
+    let seq = items.slice(i, j)
+    if (j === i) {
+      out.push(items[i]!)
+      i++
+      continue
+    }
+    // Signs on the edges belong to the sentence, except brackets that close inside.
+    const text = () => seq.map(x => x.toks.map(t => t.text).join('')).join('')
+    let lead: Item[] = []
+    let trail: Item[] = []
+    while (seq.length && seq[0]!.kind !== 'num' && !(seq[0]!.toks[0]!.text === '(' && count(text(), ')') >= count(text(), '('))) lead.push(seq.shift()!)
+    while (seq.length && seq[seq.length - 1]!.kind !== 'num' && !(seq[seq.length - 1]!.toks[0]!.text === ')' && count(text(), '(') >= count(text(), ')'))) trail.unshift(seq.pop()!)
+    if (seq.filter(x => x.kind === 'num').length >= 2) {
+      out.push(...lead, { kind: 'num', toks: seq.flatMap(x => x.toks), glue: seq[0]!.glue }, ...trail)
+    } else out.push(...lead, ...seq, ...trail)
+    i = j
+  }
+  return out
 }
 
 /** An item's text as one string, spaces restored between its words. */

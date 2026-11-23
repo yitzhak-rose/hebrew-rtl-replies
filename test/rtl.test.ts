@@ -34,6 +34,11 @@ test('in a Hebrew reply, a mostly-English paragraph with Hebrew in it is right t
   expect(kinds(parse(reply))).toBe('rtl,rtl,md')
 })
 
+test('in a Hebrew reply, a line of math alone is right to left; in an English reply it is not', async () => {
+  expect(kinds(parse('כמה פעמים 256 נכנס ב-11,025:\n\n11,025 ÷ 256 = **43.07**'))).toBe('rtl,rtl')
+  expect(kinds(parse('How many times:\n\n11,025 ÷ 256 = 43.07'))).toBe('md')
+})
+
 test('in an English reply, one Hebrew word does not flip the paragraph', async () => {
   const reply = 'This is a long English reply about the word שלום and what it means in context.'
   expect(kinds(parse(reply))).toBe('md')
@@ -140,15 +145,23 @@ test('numbers, dates, times, money and units', async () => {
   expect(d('(כיסוי של 80%+)')).toBe('[rtl:(כיסוי] [rtl:של] [num:80%+] [neu+:)]')
 })
 
-test('× and ÷ are math signs, not letters', async () => {
-  expect(d('1,200 × 21 = 25,200 צעדים')).toBe('[num:1,200] [neu:×] [num:21] [neu:=] [num:25,200] [rtl:צעדים]')
-  expect(d('₪1,200 ÷ 4 = ₪300')).toBe('[num:₪1,200] [neu:÷] [num:4] [neu:=] [num:₪300]')
-  expect(d('סה"כ: 3 × 4 = 12')).toBe('[rtl:סה"כ:] [num:3] [neu:×] [num:4] [neu:=] [num:12]')
+test('× and ÷ are math signs, and an expression reads left to right as one', async () => {
+  expect(d('1,200 × 21 = 25,200 צעדים')).toBe('[num:1,200 × 21 = 25,200] [rtl:צעדים]')
+  expect(d('₪1,200 ÷ 4 = ₪300')).toBe('[num:₪1,200 ÷ 4 = ₪300]')
+  expect(d('סה"כ: 3 × 4 = 12 ש"ח')).toBe('[rtl:סה"כ:] [num:3 × 4 = 12] [rtl:ש"ח]')
+  expect(d('אז 11,025 ÷ 256 = **43.07**')).toBe('[rtl:אז] [num:11,025 ÷ 256 = 43.07]')
+  expect(d('50% מ-200 = 100')).toBe('[num:50%] [rtl:מ-] [num+:200 = 100]')
 })
 
-test('signs between numbers written without spaces split them', async () => {
+test('brackets in an expression stay in it, written with or without spaces', async () => {
+  expect(d('(1+2)×3 = 9 וזה נכון')).toBe('[num:(1+2)×3 = 9] [rtl:וזה] [rtl:נכון]')
+  expect(d('2 × (3 + 4) = 14 בדיוק')).toBe('[num:2 × (3 + 4) = 14] [rtl:בדיוק]')
+})
+
+test('a range, a lone sign and a list of numbers are not expressions', async () => {
   expect(d('הטווח 10–20 מעלות')).toBe('[rtl:הטווח] [num:10] [neu+:–] [num+:20] [rtl:מעלות]')
-  expect(d('(1+2)×3 = 9')).toBe('[neu:(] [num+:1+2] [neu+:)] [neu+:×] [num+:3] [neu:=] [num:9]')
+  expect(d('≈ 25,000 צעדים')).toBe('[neu:≈] [num:25,000] [rtl:צעדים]')
+  expect(d('3 קבצים, 2 תיקיות')).toBe('[num:3] [rtl:קבצים,] [num:2] [rtl:תיקיות]')
   expect(d('יחס 3:1 ו-1/2 כוס')).toBe('[rtl:יחס] [num:3:1] [rtl:ו-] [num+:1/2] [rtl:כוס]')
 })
 
