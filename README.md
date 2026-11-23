@@ -1,5 +1,7 @@
 # hebrew-rtl-replies
 
+**[English](#english)** · Works for Arabic and Persian too.
+
 <div dir="rtl">
 
 תוסף שמציג את התשובות של <span dir="ltr">Claude</span> בעברית **מימין לשמאל**, מיושרות לימין ועם סימני פיסוק במקום הנכון. קוד, טבלאות ופסקאות באנגלית נשארים משמאל לימין. התוסף עובד באפליקציה למחשב, בלשונית <span dir="ltr">Code</span>.
@@ -73,6 +75,7 @@ claude plugin uninstall hebrew-rtl-replies@hebrew-rtl-replies
 - רק התשובות של <span dir="ltr">Claude</span> מושפעות. ההודעות שאתם כותבים נשארות כמו שהן.
 - שורה ארוכה של אנגלית בלבד בתוך פסקה בעברית נשברת כמו טקסט באנגלית.
 - הערות בעברית בתוך בלוק קוד נשארות משמאל לימין. זה בכוונה: כדי לתקן אותן צריך להוסיף לקוד תווים בלתי נראים, והם היו מועתקים יחד עם הקוד.
+- **העתקה:** מילים באנגלית, קוד, שמות קבצים ומספרים מועתקים נקיים. מילה בעברית עם סימן פיסוק צמוד אליה, וסוגריים, מועתקים עם תו כיוון בלתי נראה. כשמעתיקים משפט בעברית למקום שחייב טקסט מדויק, כמו שם קובץ או קוד, כדאי להעתיק מבלוק קוד או להקליד מחדש.
 
 ## משוב ודיווח על תקלות
 
@@ -106,7 +109,7 @@ Then restart the Claude desktop app. Inside a Claude Code terminal session, `/pl
 
 **Tests:** `claude plugin test .` (unit tests for the parser in `test/rtl.test.ts`, render tests in `test/render.test.tsx`).
 
-**Limitations:** desktop app only; slightly different font in right-to-left paragraphs; inline code has no background there; only Claude's replies are affected; Hebrew comments inside code blocks stay left to right, on purpose, since fixing them would put invisible direction marks into code you copy.
+**Limitations:** desktop app only; slightly different font in right-to-left paragraphs; inline code has no background there; only Claude's replies are affected; Hebrew comments inside code blocks stay left to right, on purpose, since fixing them would put invisible direction marks into code you copy. **Copying:** English words, code, file names and numbers copy clean; a Hebrew word with punctuation on its edge, and brackets, copy with an invisible direction mark, so for text that must be exact (a file name, code), copy from a code block or retype it.
 
 ## Feedback
 

@@ -1,6 +1,6 @@
 import type { Register } from 'claude-code'
 
-import { LRE, PDF, RLE, RTL, joined, parse } from './rtl'
+import { PDF, RTL, embedding, joined, parse } from './rtl'
 import type { Item, Line, Style } from './rtl'
 
 const NBSP = ' '
@@ -30,16 +30,18 @@ export const register: Register = on => {
         s
       )
 
-    // An item's text inside an embedding, so its letters order the right way whatever is around it.
+    // An item's text, inside an embedding only where its order needs one (the marks are copied
+    // with the text, so English, code and numbers carry none).
     const body = (it: Item) => {
-      const open = it.kind === 'rtl' || it.kind === 'neu' ? RLE : LRE
+      const open = embedding(it)
+      const close = open ? PDF : ''
       const first = it.toks[0]!
-      if (it.toks.every(t => same(t.style, first.style))) return [leaf(open + joined(it) + PDF, first.style)]
+      if (it.toks.every(t => same(t.style, first.style))) return [leaf(open + joined(it) + close, first.style)]
       const parts = it.toks.flatMap((t, i) => {
         const l = leaf(t.text, t.style)
         return i === 0 || t.glue ? [l] : [' ', l]
       })
-      return [open, ...parts, PDF]
+      return open ? [open, ...parts, close] : parts
     }
 
     const line = (ln: Line) => {

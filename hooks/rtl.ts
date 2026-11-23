@@ -441,6 +441,21 @@ export function joined(it: Item): string {
   return it.toks.map((t, i) => (i === 0 || t.glue ? '' : ' ') + t.text).join('')
 }
 
+/** The mark an item's text is wrapped in, or '' when it reads right without one.
+ *
+ * Each item is drawn as its own left-to-right box, so English, numbers and links order themselves,
+ * and so does a Hebrew word with only Hebrew letters on its edges. Marks are invisible but are
+ * copied with the text, so they go only where the order needs them: a Hebrew word with a sign on
+ * its edge ("רבים," or "(כיסוי"), and a bracket or a run of signs, which right to left are mirrored
+ * or reversed. */
+export function embedding(it: Item): string {
+  const s = [...joined(it)]
+  if (!s.length) return ''
+  if (it.kind === 'rtl') return RTL.test(s[0]!) && RTL.test(s[s.length - 1]!) ? '' : RLE
+  if (it.kind === 'neu') return s.length > 1 || /[()[\]{}<>«»]/.test(s[0]!) ? RLE : ''
+  return ''
+}
+
 /** A line written out item by item in reading order, for tests: `[kind:text]`, `+` when glued. */
 export function describe(items: Item[]): string {
   return items.map(i => `[${i.kind}${i.glue ? '+' : ''}:${joined(i)}]`).join(' ')

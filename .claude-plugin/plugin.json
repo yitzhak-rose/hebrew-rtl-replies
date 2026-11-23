@@ -1,6 +1,6 @@
 {
   "name": "hebrew-rtl-replies",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Draws Hebrew (and other right-to-left) replies right to left in the Claude desktop app; code, tables and English stay left to right.",
   "author": { "name": "yitzhak-rose", "url": "https://github.com/yitzhak-rose" },
   "homepage": "https://github.com/yitzhak-rose/hebrew-rtl-replies",

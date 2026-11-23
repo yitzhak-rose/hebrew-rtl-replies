@@ -1,6 +1,6 @@
 import { expect, test } from 'claude-code/testing'
 
-import { describe, group, isRtl, parse, tokens } from '../hooks/rtl'
+import { describe, embedding, group, isRtl, joined, parse, tokens } from '../hooks/rtl'
 import type { Block } from '../hooks/rtl'
 
 const d = (s: string) => describe(group(tokens(s)))
@@ -185,6 +185,22 @@ test('a bracket opened before English and closed after Hebrew stays in the sente
 test('brackets around Hebrew and numbers', async () => {
   expect(d('(בערך 1,200)')).toBe('[rtl:(בערך] [num:1,200] [neu+:)]')
   expect(d('התוצאה: 5 (במקום 4).')).toBe('[rtl:התוצאה:] [num:5] [rtl:(במקום] [num:4] [neu+:)] [neu+:.]')
+})
+
+test('English, code, numbers and plain Hebrew words carry no invisible marks, so they copy clean', async () => {
+  const marks = (s: string) =>
+    group(tokens(s)).map(it => `${joined(it)}:${embedding(it) ? 'mark' : 'clean'}`)
+  expect(marks('שמרו בקובץ `fingerprint.py` עם 1,200 × 21 = 25,200 ו-GitHub')).toEqual([
+    'שמרו:clean',
+    'בקובץ:clean',
+    'fingerprint.py:clean',
+    'עם:clean',
+    '1,200 × 21 = 25,200:clean',
+    'ו-:mark',
+    'GitHub:clean',
+  ])
+  expect(marks('רבים, (כיסוי) כן.')).toEqual(['רבים,:mark', '(כיסוי):mark', 'כן.:mark'])
+  expect(marks('אמר (Knuth) ?!')).toEqual(['אמר:clean', '(Knuth):clean', '?!:mark'])
 })
 
 test('a question mark or colon flush against English stays glued', async () => {
