@@ -29,6 +29,12 @@ test('Arabic is right to left too', async () => {
   expect(isRtl('مرحبا بالعالم')).toBe(true)
 })
 
+test('Arabic and Persian punctuation keeps its mark, so it lands on the right side', async () => {
+  const marks = (s: string) => group(tokens(s)).map(it => `${joined(it)}:${embedding(it) ? 'mark' : 'clean'}`)
+  expect(marks('بالعالم، كيف حالك؟')).toEqual(['بالعالم،:mark', 'كيف:clean', 'حالك؟:mark'])
+  expect(marks('دنیا، می‌کنیم؛ کتاب‌ها')).toEqual(['دنیا،:mark', 'می‌کنیم؛:mark', 'کتاب‌ها:clean'])
+})
+
 test('in a Hebrew reply, a mostly-English paragraph with Hebrew in it is right to left', async () => {
   const reply = 'כותרת בעברית\n\n"Premature optimization is the root of all evil" (Donald Knuth). כלומר: קודם.\n\nEnglish only here.'
   expect(kinds(parse(reply))).toBe('rtl,rtl,md')

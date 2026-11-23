@@ -451,7 +451,10 @@ export function joined(it: Item): string {
 export function embedding(it: Item): string {
   const s = [...joined(it)]
   if (!s.length) return ''
-  if (it.kind === 'rtl') return RTL.test(s[0]!) && RTL.test(s[s.length - 1]!) ? '' : RLE
+  // A letter or mark of a right-to-left script. The Arabic comma (U+060C) and other signs sit in
+  // the same blocks but are not letters, and need the mark like any sign.
+  const letter = (c: string) => RTL.test(c) && /[\p{L}\p{M}]/u.test(c)
+  if (it.kind === 'rtl') return letter(s[0]!) && letter(s[s.length - 1]!) ? '' : RLE
   if (it.kind === 'neu') return s.length > 1 || /[()[\]{}<>«»]/.test(s[0]!) ? RLE : ''
   return ''
 }
