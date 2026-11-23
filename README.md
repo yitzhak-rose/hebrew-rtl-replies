@@ -1,6 +1,8 @@
 # hebrew-rtl-replies
 
-**[English](#english)** · Works for Arabic and Persian too.
+## [English version ↓](#english)
+
+Should also work for Arabic and Persian.
 
 <div dir="rtl">
 
@@ -66,7 +68,7 @@ claude plugin uninstall hebrew-rtl-replies@hebrew-rtl-replies
 - מודגש, נטוי, מחוק, קוד בתוך שורה, קישורים, תמונות וכתובות אינטרנט.
 - כותרות, רשימות, רשימות מקוננות, תיבות סימון, ציטוטים וקו מפריד.
 - בלוקי קוד וטבלאות נשארים כמו שהאפליקציה מציגה אותם.
-- עובד גם בערבית ובשפות אחרות שנכתבות מימין לשמאל.
+- אמור לעבוד גם בערבית, בפרסית ובשפות אחרות שנכתבות מימין לשמאל. נבדק מול הדפדפן, אבל לא בשימוש אמיתי.
 
 ## מגבלות ידועות
 
@@ -92,7 +94,7 @@ claude plugin uninstall hebrew-rtl-replies@hebrew-rtl-replies
 
 ## English
 
-A plugin for Claude Code in the Claude desktop app (Code tab). It draws Claude's Hebrew replies right to left, aligned right, with punctuation where it belongs. Code blocks, tables and English paragraphs stay left to right. Arabic and other right-to-left scripts work too.
+A plugin for Claude Code in the Claude desktop app (Code tab). It draws Claude's Hebrew replies right to left, aligned right, with punctuation where it belongs. Code blocks, tables and English paragraphs stay left to right. It should also work for Arabic, Persian and other right-to-left scripts: checked against the browser's own rendering, but not yet in real use.
 
 **Install.** Needs a recent Claude Code: the plugin uses a new hooks feature, and older versions install it but cannot load it. In a terminal, run:
 
