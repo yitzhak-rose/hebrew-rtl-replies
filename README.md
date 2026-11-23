@@ -72,6 +72,7 @@ claude plugin uninstall hebrew-rtl-replies@hebrew-rtl-replies
 - הגופן בפסקאות בעברית שונה מעט מהגופן הרגיל של האפליקציה, וקוד בתוך שורה מוצג בלי רקע אפור.
 - רק התשובות של <span dir="ltr">Claude</span> מושפעות. ההודעות שאתם כותבים נשארות כמו שהן.
 - שורה ארוכה של אנגלית בלבד בתוך פסקה בעברית נשברת כמו טקסט באנגלית.
+- הערות בעברית בתוך בלוק קוד נשארות משמאל לימין. זה בכוונה: כדי לתקן אותן צריך להוסיף לקוד תווים בלתי נראים, והם היו מועתקים יחד עם הקוד.
 
 ## משוב ודיווח על תקלות
 
@@ -105,7 +106,7 @@ Then restart the Claude desktop app. Inside a Claude Code terminal session, `/pl
 
 **Tests:** `claude plugin test .` (unit tests for the parser in `test/rtl.test.ts`, render tests in `test/render.test.tsx`).
 
-**Limitations:** desktop app only; slightly different font in right-to-left paragraphs; inline code has no background there; only Claude's replies are affected.
+**Limitations:** desktop app only; slightly different font in right-to-left paragraphs; inline code has no background there; only Claude's replies are affected; Hebrew comments inside code blocks stay left to right, on purpose, since fixing them would put invisible direction marks into code you copy.
 
 ## Feedback
 
